@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Shojumaru&display=swap');
+* {
+    marggin: 0;
+    padding: 0;
+}
+
+body {
+    background: url('/assets/bg.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color:#1d1f20;
+}
+
+.headline {
+    font-family: 'Shojumaru', cursive;
+    color: #009a70;
+    text-align: center;
+}
+
+.tagline{
+    text-align: center;
+    color: #0500ff;
+    font-size: 26px;
+    font-family: 'pacifico', cursive;;
+}
+.header {
+    width: 100%;
+    height: 70px;
+    background: #3699ff;'Fredericka the Great', cursive
+    color: #fff;
+    padding-left: 50px;
+    padding-right: 50px;
+    display: flex;
+    flex-direction: row;
+    /*  position: fixed;*/
+    z-index: 10;
+}
+
+
+.btn-grad {background-image: linear-gradient(to right, #02AAB0 0%, #00CDAC  51%, #02AAB0  100%)}
+.btn-grad {
+    border: none;
+    margin: 10px;
+    padding: 9px 30px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    box-shadow: 0 0 20px #eee;
+    display: block;
+}
+
+.btn-grad:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+}
+.content-body{
+    padding-top: 10px;
+    width: 100%;
+    height: 100vh;
+    background: #eee5d44d;
+}
+.card{
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #319c31;
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 30px;
+    box-shadow: 0 0.46875rem 2.1875rem rgba(90, 97, 105, 0.1), 0 0.9375rem 1.40625rem rgba(90, 97, 105, 0.1), 0 0.25rem 0.53125rem rgba(90, 97, 105, 0.12), 0 0.125rem 0.1875rem rgba(90, 97, 105, 0.1);
+}
+.card:hover{
+    box-shadow: 6px 5px 17px -10px #000000;
+}
+.card .card-head{
+    margin: -20px -20px 20px -20px;
+    border-radius: 10px 10px 0px 0px;
+    padding: 23px 0px 3px 0px;
+    border-bottom: 1px solid #319c31;
+    background: #f2fde4;
+}
+ol.gradient-list > li::before, ol.gradient-list > li {
+    box-shadow: 0.25rem 0.25rem 0.6rem rgba(0, 0, 0, 0.05), 0 0.5rem 1.125rem rgba(75, 0, 0, 0.05);
+}
+
+ol.gradient-list {
+    counter-reset: gradient-counter;
+    list-style: none;
+    margin: 1.75rem 0;
+    padding-left: 1rem;
+}
+ol.gradient-list > li {
+    font-size: 20px;
+    background: white;
+    border-radius: 0 0.5rem 0.5rem 0.5rem;
+    counter-increment: gradient-counter;
+    margin-top: 1rem;
+    min-height: 3rem;
+    padding: 1rem 1rem 1rem 3rem;
+    position: relative;
+}
+ol.gradient-list > li::before, ol.gradient-list > li::after {
+    background: linear-gradient(to right, #02AAB0 0%, #00CDAC  51%, #02AAB0  100%);
+    border-radius: 1rem 1rem 0 1rem;
+    content: "";
+    height: 3rem;
+    left: -1rem;
+    overflow: hidden;
+    position: absolute;
+    top: -1rem;
+    width: 3rem;
+    color: white;
+}
+ol.gradient-list > li::before {
+    align-items: flex-end;
+    content: counter(gradient-counter);
+    display: flex;
+    font: 900 1.5em/1 "Montserrat";
+    justify-content: flex-end;
+    padding: 10px 17px;
+    z-index: 1;
+    color: white;
+}
+ol.gradient-list > li:before {
+    background: linear-gradient(to right, #00CDAC  51%, #02AAB0  100%);
+}
+
+ol.gradient-list > li + li {
+    margin-top: 2rem;
+}
+
+.profile-pic{
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    margin-left: 19%;
+    overflow: hidden;
+    position: relative;
+    background-color: #ffffff;
+    border: .25rem solid #f8f9fa;
+}
+.profile-pic img{
+    height: 150px;
+    width: 150px;
+}
+.profile-pic:hover > .update-profile-btn {
+    display: flex;
+    flex-direction: column;
+}
+.update-profile-btn {
+    display: none;
+    bottom: 0px;
+    z-index: 9;
+    position: absolute;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    padding: 6px;
+    text-align: center;
+    background-color: #0b0b0b8c;
+    cursor: pointer;
+    width: 100%;
+    align-content: center;
+}
+.strip{
+    background: #644db2;
+    color: #ffffff;
+    font-size: 14px;
+    width: 250px;
+    padding: 6px 6px 6px 20px;
+    margin-left: -15px;
+    border-radius: 0px 20px 20px 0px;
+}

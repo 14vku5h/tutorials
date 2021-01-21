@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>EasyTutorials - Authentication Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/assets/main.js"></script>
+</head>
+<body>
+<div class="content-body">
+
+    <div class="container">
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <ol class="gradient-list">
+                                <li>Implementation of Spring Security in Spring Boot</li>
+                                <li>Customization of User Principal</li>
+                                <li>Registration, Login, Auto-login after first registration, Store encrypted password</li>
+                                <li>Dependencies:- Spring Web, Spring Security, Spring Data JPA, Lombok, Thymeleaf, Spring Boot DevTools</li>
+                            </ol>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="card-head" style="border-radius: 0px 10px 0px 0px;">
+                                <h2 class="headline">Spring Security</h2>
+                                <h5 class="tagline">Authentication Example</h5>
+                            </div>
+                            <div th:if="${param.error}" class="alert alert-danger">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Failed!</strong> &nbsp;&nbsp;&nbsp;<span>Invalid credentials.</span>
+                            </div>
+                            <div th:if="${param.logout}" class="alert alert-success">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Success!</strong> &nbsp;&nbsp;<span>You logged out successfully.</span>
+                            </div>
+                            <form action="/login" method="post" class="needs-validation " novalidate>
+                                <div class="form-group">
+                                    <label for="uname" >Email or Mobile</label>
+                                    <input type="text" class="form-control" id="uname" placeholder="Email or mobile" name="username"
+                                           required>
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Please fill out this field.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pwd">Password</label>
+                                    <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password"
+                                           required>
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Please fill out this field.</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-6">
+                                        <button type="submit" class="btn-grad">Sign In</button>
+                                    </div>
+                                </div>
+                                <p style="margin-top: 30px;">Do not have account? <a href="/register">REGISTER HERE</a> </p>
+                                <p class="text-center" style="font-size: 21px">By <a href="https://www.easytutorials.live">easytutorials.live</a></p>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

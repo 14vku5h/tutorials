@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>EasyTutorials - Authentication Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/main.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/assets/main.js"></script>
+</head>
+<body>
+<div class="content-body">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div style="align-items: center">
+                                <div class="profile-pic" th:with="pic=${#authentication.principal.profilePic}">
+                                    <img th:src="${pic!=null?'data:image/png;base64,'+pic:'/assets/user-icon.png'}">
+                                    <div class="update-profile-btn" data-toggle="modal"
+                                         data-target="#update-profile-photo">
+                                        <i class="mdi mdi-camera"></i> Update
+                                    </div>
+                                </div>
+                                <br>
+                                <p class="text-center"><strong th:text="${#authentication.principal.name}"></strong></p>
+                                <p class="text-center"><a href="/logout" class="btn-grad">Logout</a></p>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="col-md-8  " style="border-left: 1px solid limegreen">
+                            <div class="strip">PERSONAL INFORMATION</div>
+                            <table class="table">
+                                <tr>
+                                    <td>Nick Name</td>
+                                    <td>- <a href="#">Edit</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Gender</td>
+                                    <td>- <a href="#">Edit</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Birth Date</td>
+                                    <td>- <a href="#">Edit</a></td>
+                                </tr>
+                            </table>
+                            <div class="strip">CONTACT INFORMATION</div>
+                            <table class="table">
+                                <tr>
+                                    <td>Website</td>
+                                    <td>- <a href="#">Edit</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td th:text="${#authentication.principal.email}">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Mobile</td>
+                                    <td th:text="${#authentication.principal.mobile}">-</td>
+                                </tr>
+                            </table>
+                            <div class="strip">SOCIAL NETWORK</div>
+                            <table class="table">
+                                <tr>
+                                    <td>Facebook</td>
+                                    <td>- <a href="#">Edit</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Instagram</td>
+                                    <td>- <a href="#">Edit</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Twitter</td>
+                                    <td>- <a href="#">Edit</a></td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="update-profile-photo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Upload profile picture.</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
