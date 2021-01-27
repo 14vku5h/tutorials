@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>EasyTutorials - Pagination Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+.pageControl{display: flex;flex-direction: row}
+.curr{padding: 4px 10px;letter-spacing: 4px;}
+.goto{width:70px}
+.table td{padding:5px}
+.form-control{height:30px;padding:0 10px}
+.btn{padding:0 5px;height:30px}
+
+.loader {height: 4px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #ddd
+}
+.loader:before {
+    display: block;
+    position: absolute;
+    content: "";
+    left: -200px;
+    width: 200px;
+    height: 4px;
+    background-color: #2980b9;
+    animation: loading 1s linear infinite
+}
+
+@keyframes loading {
+    from {left:-200px;width:30% }
+    50%{width:30%}
+    70%{width:70%}
+    80%{left:50%}
+    95%{left:120%}
+    to{left:100%}
+}
+    </style>
+</head>
+<body>
+<div class="container">
+    <hr>
+    <h4 class="text-center text-primary">Custom Data Table with Search & filters</h4>
+    <hr>
+    <form id="filterForm" method="post" action="/students">
+        <input type="hidden" id="pageInput"  name="page" value="1">
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="pageControl">
+                    <span>Show:</span>
+                    <select style="width: 70px;"  id="pageSize" name="size" class="form-control">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <span>entries</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="srchTxt" name="srchTxt" placeholder="search with name">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <select class="form-control" id="klass" name="klass">
+                        <option value="">--select class--</option>
+                        <option th:each="c : ${@studentService.getKlasses()}" th:value="${c.name}"
+                                th:text="${c.std}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <input type="date" class="form-control" id="dateOfAdmission" name="dateOfAdmission" placeholder="date of admission">
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <div class="loader lstloader"></div>
+        <div class="table-responsive" style="overflow-y: auto">
+            <table class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Class</th>
+                    <th>Date of Admission</th>
+                </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+        <div class="row table-bottom">
+            <div class="col-md-4 ">
+                <div class="pageControl">
+                    <span> Showing <strong id="offset">0</strong> to <strong  id="numberOfElements">0</strong> of <strong id="totalElements">0</strong> entries</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="pageControl ">
+                    <span>Page No.</span>
+                    <input type="text" id="gotoPage" class="goto form-control" onkeyup="changeJumpPage(this.value)"
+                           value="1">
+                    <button type="button" onclick="jumpToPage()" class="btn btn-primary">Jump</button>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="pageControl text-center ">
+                    <button disabled="" class="btn btn-primary" id="prevBtn">Prev</button>
+                    <div class="curr" id="currentPage">1/1</div>
+                    <button disabled="" class="btn btn-primary" id="nextBtn">Next</button>
+                </div>
+            </div>
+        </div>
+</div>
+<script>
+$(document).ready(function () {
+    fetchData();
+    $("#klass,#dateOfAdmission").on("change", function () {
+        $("#pageInput").val(1);
+        fetchData();
+    });
+    $("#srchTxt").on("input", function () {
+        $("#pageInput").val(1);
+        fetchData();
+    });
+});
+var dataUrl = "/students";
+var prevBtn = $("#prevBtn");
+var nextBtn = $("#nextBtn");
+var totalElements = $("#totalElements");
+var numberOfElements = $("#numberOfElements");
+var offset = $("#offset");
+var currentPage = $("#currentPage");
+var pageSize = $("#pageSize");
+var pageNumber = $("#pageInput");
+var from = 0;
+var to = 0;
+
+var totalPages=0;
+var gotoPage = $("#gotoPage");
+var loader = {};
+loader.show=function () {
+    $(".lstloader").show();
+};
+loader.hide=function () {
+    $(".lstloader").hide();
+};
+
+function fetchData() {
+    loader.show();
+    var formData = getFormData($("#filterForm"));
+    console.log(formData);
+    $.post(dataUrl, formData,function (data,status) {
+        console.log(data);
+        setTableParams(data);
+
+        var content = data.content;
+        if (Object.keys(content).length > 0) {
+            var tbody = $("<tbody/>", {id: "tbody"});
+            var count = from;
+            for (var i in content) {
+                var rec = content[i];
+                var tr = $("<tr>").append(
+                    $("<td/>", {text:rec.id }),
+                    $("<td/>", {text:rec.name}),
+                    $("<td/>", {text:rec.email}),
+                    $("<td/>", {text:rec.klass}),
+                    $("<td/>", {text:rec.dateOfAdmission})
+                );
+                tbody.append(tr);
+                count++;
+            }
+            $("#tbody").replaceWith(tbody);
+        } else {
+            $("#tbody").empty();
+            $("#tbody").append(
+                $("<tr/>").append($("<td/>",{
+                    colspan:"20",
+                    class:"text-center text-info",
+                    text:"No records found"
+                }))
+            );
+        }
+        loader.hide();
+    }).fail(function (t,e) {
+        ajaxErr(t,e);
+        loader.hide();
+    });
+}
+
+function setTableParams(record) {
+    pageSize.val(record.pageable.pageSize);
+    totalElements.text(record.totalElements);
+    if(record.totalElements=="0"){
+        from = Number(record.pageable.offset);
+    }else
+        from = Number(record.pageable.offset) + 1;
+    offset.text(from);
+    to = (record.pageable.offset) + Number(record.numberOfElements);
+    numberOfElements.text(to);
+    pageNumber.val(Number(record.pageable.pageNumber) + 1);
+    totalPages = Number(record.totalPages);
+    currentPage.text(pageNumber.val()+"/"+totalPages);
+    gotoPage.val(pageNumber.val());
+    if (record.first == true)
+        prevBtn.attr("disabled","");
+    else
+        prevBtn.removeAttr("disabled");
+    if (record.last == true)
+        nextBtn.attr("disabled","");
+    else
+        nextBtn.removeAttr("disabled");
+}
+prevBtn.click(function () {
+    if (!prevBtn.hasClass("disabled")) {
+        //console.log("Going to previous page.");
+        pageNumber.val(Number(pageNumber.val()) - 1);
+        fetchData();
+    } else {
+        console.log("Nothing to do");
+    }
+});
+
+nextBtn.click(function () {
+    if (!nextBtn.hasClass("disabled")) {
+        //console.log("Going to next page.");
+        pageNumber.val(Number(pageNumber.val()) + 1);
+        fetchData();
+    } else {
+        console.log("Nothing to do");
+    }
+});
+
+pageSize.on("change", function () {
+    $("#pageInput").val(1);
+    fetchData()
+});
+
+function jumpToPage() {
+    var n = Number(gotoPage.val());
+    //console.log(n);
+    if(gotoPage.val()!=='' && n>0 && n<=totalPages){
+        pageNumber.val(n);
+        fetchData();
+    }
+}
+// this will convert form data to json format
+function getFormData(t) {
+    var e = t.serializeArray(), n = {};
+    return $.map(e, function (t, e) {
+        n[t.name] = t.value
+    }), n
+}
+// to filter out the response error
+function ajaxErr(t, e) {
+    var n = "";
+    0 === t.status ? n = "Verify Network and refresh the page." : 404 == t.status ? n = "Requested page not found. [404]" : 500 == t.status ? n = "Internal Server Error [500]." : "parsererror" === e ? n = "Requested JSON parse failed." : "timeout" === e ? n = "Time out error." : "abort" === e ? n = "Ajax request aborted." : (console.log("uncaught error"), n = t.responseText),
+        alert(n);
+}
+</script>
+</body>
+</html>
