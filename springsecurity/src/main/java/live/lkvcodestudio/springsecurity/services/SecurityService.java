@@ -35,26 +35,28 @@ public class SecurityService implements UserDetailsService {
         CustomUserPrincipal userPrincipal = null;
         Optional<User> user = null;
 
+        /* check user if user enters email as username*/
         user = userRepository.findByEmail(username);
         if (user.isPresent())
             userPrincipal = CustomUserPrincipal.createWithEmail(user.get());
         else {
+            /* check user if user not present with email, username may be mobile no.*/
             user = userRepository.findByMobile(username);
             if (user.isPresent())
                 userPrincipal = CustomUserPrincipal.createWithMobile(user.get());
         }
-
+        /* check that user is present with email or mobile */
         if (userPrincipal == null)
             throw new UsernameNotFoundException("User not found with username: " + username);
         else
             return userPrincipal;
     }
 
-
-    public void loginFirstTime(User user) {
+/* Username Password Authentication method to allow user to log in just after registration*/
+    public void loginFirstTime(User user,String plainPassowrd) {
         log.info("Auto login .....!");
         UserDetails userDetails = loadUserByUsername(user.getEmail());
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, user.getPassword(), userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, plainPassowrd, userDetails.getAuthorities());
         authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         if (usernamePasswordAuthenticationToken.isAuthenticated()) {
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

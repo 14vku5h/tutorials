@@ -23,15 +23,21 @@ public class UserService {
     private UserRepository userRepository;
 
     public ModelAndView registerUser(User user) {
-        ModelAndView mv = new ModelAndView("admin/profile");
+        ModelAndView mv = new ModelAndView("profile");
         Optional<User> checkUser = userRepository.findByEmail(user.getEmail());
         if(!checkUser.isPresent()){
             checkUser = userRepository.findByMobile(user.getMobile());
             if(!checkUser.isPresent()) {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                String plainPassowrd = user.getPassword();
+                user.setPassword(passwordEncoder.encode(plainPassowrd));
+                //setting the default role as string
                 user.setRole("ROLE_USER");
+                /* role based authorization will be demonstrated in part 2 of this series
+                 keep visiting easytutorials.live */
                 user = userRepository.save(user);
-                securityService.loginFirstTime(user);
+
+                /* auto login first time */
+                securityService.loginFirstTime(user,plainPassowrd);
             }else{
                 mv.setViewName("register");
                 mv.addObject("error","A user is already present with this mobile number");
@@ -40,12 +46,11 @@ public class UserService {
             mv.setViewName("register");
             mv.addObject("error","User already registered with this email");
         }
-        mv.setViewName("admin/profile");
         return mv;
     }
 
 
-
+/* This method will use to change the authentication principal details without logout */
     public void updateAuthenticationDetails(User updatedUser) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserPrincipal user = (CustomUserPrincipal) auth.getPrincipal();
@@ -57,12 +62,13 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
+    /* if you need something with logged in user principal details */
     public CustomUserPrincipal getLoggedInUserPrincipal(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserPrincipal user = (CustomUserPrincipal) auth.getPrincipal();
         return user;
     }
-
+    /* if you need all details of logged in user */
     public User getLoggedInUser(){
         return userRepository.findByEmail(getLoggedInUserPrincipal().getEmail()).get();
     }

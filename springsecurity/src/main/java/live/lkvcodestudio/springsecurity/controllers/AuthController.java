@@ -21,7 +21,7 @@ public class AuthController {
     @GetMapping(value = {"/", "/login"})
     public String login(Model model, String error, String logout, Principal principal) {
         if (principal != null)
-            return "redirect:/admin/profile";
+            return "redirect:/profile";
         if (error != null)
             model.addAttribute("error", error);
 
@@ -34,20 +34,30 @@ public class AuthController {
     @GetMapping("/register")
     public String register(Model model, Principal principal) {
         if (principal != null) {
-            return "redirect:/admin/profile";
+            return "redirect:/profile";
         }
         return "register";
     }
 
     @PostMapping("/register")
-    public ModelAndView register(User user){
+    public ModelAndView register(User user) {
         ModelAndView mv = userService.registerUser(user);
         return mv;
     }
 
+    /* to check the authentication principal details */
     @GetMapping("/principal")
     @ResponseBody
     public Principal principal(Principal principal) {
         return principal;
+    }
+
+    /* you can only open this page if user is authenticated, why? see SecurityConfig.java */
+    @GetMapping("/profile")
+    public String profile(Model model) {
+        /* simply open the profile page
+         *  and display the name, email, mobile number and profile picture
+         *  through authentication principal, how? see profile.html */
+        return "/profile";
     }
 }

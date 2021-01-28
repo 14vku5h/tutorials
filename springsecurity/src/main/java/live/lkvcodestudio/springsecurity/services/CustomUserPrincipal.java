@@ -18,9 +18,7 @@ import java.util.List;
 public class CustomUserPrincipal implements UserDetails, Serializable {
 
     private String  uniqueId;
-
     private String name;
-    private String nikname;
     private String email;
     private String mobile;
     private String profilePic;
