@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>EasyTutorials - Pagination Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form method="post" action="/uploadFile" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Select Image File</label>
+                <input type="file" name="myfile" accept="image/*" class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Upload" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+</div>
+<h2>Images displayed using response objects </h2>
+<div class="row">
+    <div class="col-md-3" th:each="img:${images}">
+        <div class="container">
+            <p th:text="${img.name}"></p>
+            <p th:text="${img.type}"></p>
+             <img th:src="${'/images/'+img.name}" style="max-height: 110px">
+        </div>
+    </div>
+</div>
+<h2>Images displayed using base64 string </h2>
+    <div class="row">
+        <div class="col-md-3" th:each="img:${images}">
+            <div class="container">
+                <p th:text="${img.name}"></p>
+                <p th:text="${img.type}"></p>
+                <img th:src="${img.base64Img}" style="max-height: 110px">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
