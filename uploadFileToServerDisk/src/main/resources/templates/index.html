@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>easytutorials.live</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form method="post" action="/uploadFile" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Select Image File</label>
+                <input type="file" name="myfile" accept="image/*" class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Upload" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+</div>
+<h2 class="text-success">Images displayed using Resource Handler</h2>
+<div class="row">
+    <div class="col-md-4" th:each="img:${images}">
+        <div class="container">
+            <p th:text="${img.fileName}"></p>
+            <p th:text="${img.fileType}"></p>
+             <img th:src="${'/storage/'+img.fileName}" style="max-height: 220px">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
