@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +31,7 @@ public class StudentService {
 
     public ResponseEntity getPaginatedStudents(StudentSearchCO srchCo) {
         try {
+
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery();
             Root root = criteriaQuery.from(Student.class);
@@ -48,8 +48,17 @@ public class StudentService {
             }
 
             List<Order> orderList = new ArrayList<>();
-                //ordered by name
-                orderList.add(criteriaBuilder.asc(root.get("id")));
+            String orderStr = srchCo.getOrders();
+            if(!orderStr.isEmpty()){
+                String order[] = orderStr.split("@@");
+                for(int x=0;x<order.length;x++){
+                    String s[] = order[x].split("::");
+                    orderList.add(
+                            s[1].matches("ASC")?
+                                    criteriaBuilder.asc(root.get(s[0])) :
+                                    criteriaBuilder.desc(root.get(s[0])));
+                }
+            }
 
             criteriaQuery.orderBy(orderList);
 
@@ -87,6 +96,7 @@ public class StudentService {
 
     @PostConstruct
     public void booststrapSampleData(){
+        studentRepository.deleteAll();
         if(studentRepository.count()==0) {
             List<Student> studentList = new ArrayList<>();
             List<Klass> klasses = Arrays.asList(getKlasses());
@@ -95,7 +105,7 @@ public class StudentService {
             IntStream.range(0,klasses.size()).forEach(k -> {
                 LocalDate date = LocalDate.now();
                 IntStream.range(0,names.size()).forEach(n->{
-                    studentList.add(new Student(names.get(n)+" "+k+n,names.get(n).toLowerCase()+k+n+"@demo.com",klasses.get(k),date.minusDays(n)));
+                    studentList.add(new Student(names.get(n),names.get(n).toLowerCase()+k+n+"@demo.com",klasses.get(k),date.minusDays(k)));
                 });
             });
 

@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -41,6 +42,13 @@
     95%{left:120%}
     to{left:100%}
 }
+.sort{
+cursor:pointer;
+}
+.fa, .fas {
+    color:#28a745;
+    float: right;
+}
     </style>
 </head>
 <body>
@@ -50,7 +58,6 @@
     <hr>
     <form id="filterForm" method="post" action="/students">
         <input type="hidden" id="pageInput"  name="page" value="1">
-
         <div class="row">
             <div class="col-md-3">
                 <div class="pageControl">
@@ -91,10 +98,10 @@
                 <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Name</th>
+                    <th class="sort " sort-by="name" direction="">Name <small class="text-success">(sortable)</small> <i class="fa"></i></th>
                     <th>Email</th>
                     <th>Class</th>
-                    <th>Date of Admission</th>
+                    <th class="sort" sort-by="dateOfAdmission" direction="" >Date of Admission <small class="text-success">(sortable)</small> <i class="fa"></i></th>
                 </tr>
                 </thead>
                 <tbody id="tbody"></tbody>
@@ -135,6 +142,36 @@ $(document).ready(function () {
         $("#pageInput").val(1);
         fetchData();
     });
+
+    $(".sort").click(function(){
+          var sort = $(".sort");
+          var td = $(this);
+          if(!td.hasClass("active")){
+            td.addClass("active");
+          }
+          var direction=td.attr("direction");
+          if(direction==="ASC"){
+              td.attr("direction","DESC");
+              td.find(".fa").removeClass("fa-angle-up").addClass("fa-angle-down");
+          }else{
+              td.attr("direction","ASC");
+              td.find(".fa").removeClass("fa-angle-down").addClass("fa-angle-up");
+          }
+          orders="";
+          for(i=0;i<sort.length;i++){
+          var t = $(sort[i]);
+            if(t.hasClass("active")){
+            if(orders !== ""){
+            orders = orders+"@@";
+            }
+            console.log(t.attr("sort-by"));
+            orders = orders+t.attr("sort-by")+"::"+t.attr("direction");
+            }
+          }
+          console.log(orders);
+          fetchData();
+       });
+
 });
 var dataUrl = "/students";
 var prevBtn = $("#prevBtn");
@@ -147,6 +184,8 @@ var pageSize = $("#pageSize");
 var pageNumber = $("#pageInput");
 var from = 0;
 var to = 0;
+/* Default ordering */
+var orders ="";//"name::ASC@@dateOfAdmission::ASC";
 
 var totalPages=0;
 var gotoPage = $("#gotoPage");
@@ -161,6 +200,7 @@ loader.hide=function () {
 function fetchData() {
     loader.show();
     var formData = getFormData($("#filterForm"));
+    formData.orders = orders;
     console.log(formData);
     $.post(dataUrl, formData,function (data,status) {
         console.log(data);
@@ -199,7 +239,9 @@ function fetchData() {
         loader.hide();
     });
 }
+function getOrderString(orders){
 
+}
 function setTableParams(record) {
     pageSize.val(record.pageable.pageSize);
     totalElements.text(record.totalElements);
