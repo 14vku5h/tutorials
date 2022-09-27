@@ -1,12 +1,14 @@
 # tutorials
-Example tutorials for the website easytutorials.live
+Example tutorials for the website [Spring Boot Master](https://springbootmaster.blogspot.com)
 
-[How to implement spring security in Spring Boot MVC application](https://www.easytutorials.live/howto/how-to-implement-spring-security)
+[How to implement spring security in Spring Boot MVC application](https://springbootmaster.blogspot.com/2022/09/how-to-implement-spring-security-in.html)
 
-[Custom pagination in spring boot](https://www.easytutorials.live/howto/custom-pagination-in-with-spring-boot)
+[Custom pagination in spring boot](https://springbootmaster.blogspot.com/2022/09/custom-pagination-with-search-and.html)
 
-[How to upload files in database in spring boot application](https://www.easytutorials.live/howto/how-to-upload-files-in-database-using-spring-boot)
+[How to upload files in database in spring boot application](https://springbootmaster.blogspot.com)
 
-[How to upload files in server's disk using spring boot](https://www.easytutorials.live/howto/how-to-upload-files-in-server-location-using-spring-boot)
+[How to upload files in server's disk using spring boot](https://springbootmaster.blogspot.com)
 
-[How to upload files in Amazon S3 Bucket using Spring Boot](https://www.easytutorials.live/howto/how-to-upload-files-in-amazon-s3-bucket-using-spring-boot)
+[How to upload files in Amazon S3 Bucket using Spring Boot](https://springbootmaster.blogspot.com/2022/09/how-to-upload-files-in-amazon-s3-bucket.html)
+
+[How to implement AWS RDS IAM Authentication in spring boot](https://springbootmaster.blogspot.com/2022/09/how-to-implement-aws-rds-database-iam.html)
